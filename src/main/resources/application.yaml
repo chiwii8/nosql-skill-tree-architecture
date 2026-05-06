@@ -1,3 +1,20 @@
 spring:
   application:
     name: nosql-tree
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: skilltree_db
+    neo4j:
+      uri: bolt://localhost:7687
+      authentication:
+        username: neo4j
+        password: password123
+    autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration, org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration
+
+
+server:
+  port: 8080
+
