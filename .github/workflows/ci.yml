@@ -1,0 +1,28 @@
+name: Java CI con Maven (Verificador de Tests)
+
+on:
+  push:
+    branches: [ main, master, develop ] # Cuando subas código a estas ramas
+  pull_request:
+    branches: [ main, master ]          # Cuando intentes fusionar código
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Levanta una máquina virtual con Linux
+
+    steps:
+      # Paso 1: Copiar el código de tu repositorio en la máquina virtual
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      # Paso 2: Instalar Java (JDK 17 o 21, pon la versión que estés usando en tu pom.xml)
+      - name: Configurar JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # ⚠️ Cambia a '21' si tu proyecto usa Java 21
+          distribution: 'temurin'
+          cache: maven
+
+      # Paso 3: Compilar el proyecto y ejecutar los tests unitarios
+      - name: Ejecutar Tests Unitarios con Maven
+        run: mvn clean test
