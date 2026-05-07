@@ -3,8 +3,6 @@ package com.nosql_tree.user.infrastructure.inbound;
 import com.nosql_tree.user.domain.exception.UserNotFoundException;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.inbound.GetUserPort;
-import lombok.Getter;
-import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -3,8 +3,6 @@ package com.nosql_tree.user.infrastructure.outbound.mongodb;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.outbound.UserRepositoryPort;
 import org.springframework.stereotype.Component;
-
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
