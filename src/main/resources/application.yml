@@ -3,14 +3,15 @@ spring:
     name: nosql-tree
   data:
     mongodb:
-      uri: mongodb://localhost:27017/skilltree_db
+      host: localhost
+      port: 27017
+      database: skilltree_db  # Forzamos el nombre fuera de la URI
     neo4j:
       uri: bolt://localhost:7687
       authentication:
         username: neo4j
         password: password123
 
-
 server:
   port: 8080
-
+debug: true
