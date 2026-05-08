@@ -34,7 +34,6 @@ public class GetUserService implements GetUserPort {
 
         // find the user
         Optional<User> optionalUser = userRepositoryPort.findById(id);
-
         //review if is in the DB and throw and exception
         if(optionalUser.isEmpty())
             throw new UserNotFoundException("The user is not Found with Id: " + id);
