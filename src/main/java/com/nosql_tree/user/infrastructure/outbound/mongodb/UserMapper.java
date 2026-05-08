@@ -14,6 +14,8 @@ import com.nosql_tree.user.domain.model.User;
 
 public class UserMapper {
 
+    private UserMapper(){}
+
     /**
      * translate the model class to Document of MongoDB
      * @param user class to translate
@@ -25,6 +27,12 @@ public class UserMapper {
         document.setId(user.getId());
         document.setName(user.getName());
         document.setUnlockedSkills(user.getUnlockedSkills());
+        document.setEmail(user.getEmail());
+        document.setPassword(user.getPassword());
+        document.setRole(user.getRole());
+        document.setMetadata(user.getMetadata());
+        document.setLastLogin(user.getLastLogin());
+        document.setLevel(user.getLevel());
 
         return document;
     }
@@ -43,7 +51,13 @@ public class UserMapper {
         return new User(
                 document.getId(),
                 document.getName(),
-                document.getUnlockedSkills()
+                document.getUnlockedSkills(),
+                document.getEmail(),
+                document.getPassword(),
+                document.getRole(),
+                document.getMetadata(),
+                document.getLastLogin(),
+                document.getLevel()
         );
     }
 }

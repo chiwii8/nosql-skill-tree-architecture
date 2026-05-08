@@ -24,14 +24,45 @@ public class UserMongoDBAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public void save(User user) {
+    public User save(User user) {
         UserDocument document = UserMapper.toDocument(user);
         mongoRepository.save(document);
+        return user;
     }
 
     @Override
     public Optional<User> findById(String id) {
         return  mongoRepository.findById(id)
                 .map(UserMapper::toDomain);
+    }
+
+    @Override
+    public void deleteById(String id){
+        mongoRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(String id){
+        return mongoRepository.existsById(id);
+    }
+
+    @Override
+    public User updateUser(User user){
+        UserDocument userDocument = UserMapper.toDocument(user);
+        UserDocument updatedUser = mongoRepository.save(userDocument);
+
+        return UserMapper.toDomain(updatedUser);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email){
+        return mongoRepository.findByEmail(email)
+                .map(UserMapper::toDomain);
+
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return mongoRepository.existsByEmail(email);
     }
 }

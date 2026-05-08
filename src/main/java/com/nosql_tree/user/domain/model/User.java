@@ -1,6 +1,9 @@
 package com.nosql_tree.user.domain.model;
 
-import java.util.List;
+
+import java.time.LocalDate;
+import java.time.temporal.Temporal;
+import java.util.*;
 
 /**
  * User.java
@@ -16,10 +19,69 @@ public class User {
     private String name;
     private List<String> unlockedSkills;
 
-    public User(String id, String name, List<String> unlockedSkills) {
+    ///UserAccount variables, use in the same clase for short time and more control of the document
+    private String email;   // Represents the username in the login
+    private String password; // Should be hashed
+    private String role;
+
+
+    /// More info for MongoDB document
+    private Map<String, Object> metadata;
+    private String lastLogin;
+
+    private int level;  //Actual level of advanced in the tree
+
+    public User(String name, String id, String email, String password, String role) {
+        this.name = name;
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role == null ? "USER" : role;
+        this.level = 1;
+        this.unlockedSkills = new ArrayList<>();
+        this.metadata = new HashMap<>();
+    }
+
+    public User(String id, String name, List<String> unlockedSkills, String email, String password, String role, Map<String, Object> metadata, String lastLogin, int level) {
         this.id = id;
         this.name = name;
         this.unlockedSkills = unlockedSkills;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.metadata = metadata;
+        this.lastLogin = lastLogin;
+        this.level = level;
+    }
+
+    public User() {
+        role = "user";
+        unlockedSkills = new ArrayList<>();
+    }
+
+    /// This constructor is created for test purpose
+    public User(String userId, String name, List<String> unlockedSkills) {
+        this.id = userId;
+        this.name = name;
+        this.unlockedSkills = unlockedSkills;
+        this.email = "testmail";
+        this.password= "testPass";
+        this.role="USER";
+        this.metadata = new HashMap<>();
+        this.lastLogin = "1/01/2026";
+        this.level = 1;
+    }
+
+    /// This constructor is created for test purpose
+    public User(String name) {
+        this.name = name;
+        this.unlockedSkills = new ArrayList<>();
+        this.email = "testmail";
+        this.password= "testPass";
+        this.role="USER";
+        this.metadata = new HashMap<>();
+        this.lastLogin = "1/01/2026";
+        this.level = 1;
     }
 
     public String getId() {
@@ -44,5 +106,53 @@ public class User {
 
     public void setUnlockedSkills(List<String> unlockedSkills) {
         this.unlockedSkills = unlockedSkills;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
