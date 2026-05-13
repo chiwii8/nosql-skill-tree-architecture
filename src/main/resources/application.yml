@@ -12,6 +12,11 @@ spring:
         username: neo4j
         password: password123
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api/v3/docs
 server:
   port: 8080
 debug: true
