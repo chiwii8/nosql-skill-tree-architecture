@@ -4,7 +4,7 @@ import com.nosql_tree.user.domain.model.User;
 
 import java.util.Optional;
 
-public interface UserRepositoryPort {
+public interface UserMongoRepositoryPort {
     User save(User user);
     Optional<User> findById(String id);
     void deleteById(String id);
