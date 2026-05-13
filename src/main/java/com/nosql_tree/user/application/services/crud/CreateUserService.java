@@ -1,13 +1,13 @@
-package com.nosql_tree.user.application.services;
+package com.nosql_tree.user.application.services.crud;
 
 import com.nosql_tree.user.domain.exception.UserAlreadyExists;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.inbound.CreateUserPort;
-import com.nosql_tree.user.domain.ports.outbound.UserRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserNeo4jRepositoryPort;
 import com.nosql_tree.util.HashPasswordUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -22,10 +22,12 @@ import java.util.UUID;
 @Service
 public class CreateUserService implements CreateUserPort {
 
-    private final UserRepositoryPort userRepositoryPort;
+    private final UserMongoRepositoryPort userMongoRepositoryPort;
+    private final UserNeo4jRepositoryPort userNeo4jRepositoryPort;
 
-    public CreateUserService(UserRepositoryPort userRepositoryPort) {
-        this.userRepositoryPort = userRepositoryPort;
+    public CreateUserService(UserMongoRepositoryPort userMongoRepositoryPort, UserNeo4jRepositoryPort userNeo4jRepositoryPort) {
+        this.userMongoRepositoryPort = userMongoRepositoryPort;
+        this.userNeo4jRepositoryPort = userNeo4jRepositoryPort;
     }
 
     @Override
@@ -34,11 +36,12 @@ public class CreateUserService implements CreateUserPort {
             throw new IllegalArgumentException("The Creation of User cannot be possible with invalid data");
         }
 
-        if(userRepositoryPort.existsByEmail(user.getEmail()))
+        if(userMongoRepositoryPort.existsByEmail(user.getEmail()))
             throw new UserAlreadyExists("The User email already exists in the database");
 
         String uuid = UUID.randomUUID().toString();
         String hashedPassword = HashPasswordUtil.encryptPassword(user.getPassword());
+
         User newUser = new User(
                 uuid,
                 user.getName(),
@@ -47,6 +50,10 @@ public class CreateUserService implements CreateUserPort {
                 user.getRole()
         );
 
-        return this.userRepositoryPort.save(newUser);
+        User savedUser = this.userMongoRepositoryPort.save(newUser);
+        ///Level default value is 1
+        this.userNeo4jRepositoryPort.save(newUser);
+
+        return savedUser;
     }
 }
