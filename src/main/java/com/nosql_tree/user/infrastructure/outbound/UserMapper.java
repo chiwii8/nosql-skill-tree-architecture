@@ -1,6 +1,8 @@
-package com.nosql_tree.user.infrastructure.outbound.mongodb;
+package com.nosql_tree.user.infrastructure.outbound;
 
 import com.nosql_tree.user.domain.model.User;
+import com.nosql_tree.user.infrastructure.outbound.mongodb.UserDocument;
+import com.nosql_tree.user.infrastructure.outbound.neo4j.UserNode;
 
 /**
  * userMapper.java
@@ -39,7 +41,7 @@ public class UserMapper {
 
     /**
      * translate the Document user to domain implementation
-     * @param document type of translation
+     * @param document type of translation for MongoDB
      * @return user domain class translated from
      */
     public static User toDomain(UserDocument document){
@@ -58,6 +60,35 @@ public class UserMapper {
                 document.getMetadata(),
                 document.getLastLogin(),
                 document.getLevel()
+        );
+    }
+
+    /**
+     * translate the Node user to domain implementation, only return the used classes for the node
+     * @param node type of translation for Neo4j
+     * @return User model class
+     */
+    public static User toDomain(UserNode node){
+        if(node == null){
+            return null;
+        }
+
+        return new User(
+                node.getId(),
+                node.getName(),
+                node.getLevel()
+        );
+    }
+
+    public static UserNode toNode(User user){
+        if(user == null){
+            return null;
+        }
+
+        return new UserNode(
+                user.getId(),
+                user.getName(),
+                user.getLevel()
         );
     }
 }

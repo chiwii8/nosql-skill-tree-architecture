@@ -1,25 +1,26 @@
 package com.nosql_tree.user.infrastructure.outbound.mongodb;
 
 import com.nosql_tree.user.domain.model.User;
-import com.nosql_tree.user.domain.ports.outbound.UserRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
+import com.nosql_tree.user.infrastructure.outbound.UserMapper;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * UserMongoDBAdapter.java
+ * UserMongoMongoDBAdapter.java
  * <p>
- * Description: implementation of the adapter of the mongoDB using the default interface of UserRepositoryPort
+ * Description: implementation of the adapter of the mongoDB using the default interface of UserMongoRepositoryPort
  *
  * @author aleja
  * @since 06/05/2026
  */
 
 @Component
-public class UserMongoDBAdapter implements UserRepositoryPort {
+public class UserMongoMongoDBAdapter implements UserMongoRepositoryPort {
 
     private final SpringDataMongoRepository mongoRepository;
 
-    public UserMongoDBAdapter(SpringDataMongoRepository mongoRepository) {
+    public UserMongoMongoDBAdapter(SpringDataMongoRepository mongoRepository) {
         this.mongoRepository = mongoRepository;
     }
 
