@@ -1,8 +1,10 @@
 package com.nosql_tree.user.application.services;
 
+import com.nosql_tree.user.application.services.crud.CreateUserService;
 import com.nosql_tree.user.domain.exception.UserAlreadyExists;
 import com.nosql_tree.user.domain.model.User;
-import com.nosql_tree.user.domain.ports.outbound.UserRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserNeo4jRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,14 +31,16 @@ import static org.mockito.Mockito.*;
  */
 
 class CreateUserServiceTest {
-    private UserRepositoryPort userRepositoryPort;
+    private UserMongoRepositoryPort userMongoRepositoryPort;
+    private UserNeo4jRepositoryPort userNeo4jRepositoryPort;
     private CreateUserService createUserService;
 
 
     @BeforeEach
     void setUp(){
-        userRepositoryPort = mock(UserRepositoryPort.class);
-        createUserService = new CreateUserService(userRepositoryPort);
+        userMongoRepositoryPort = mock(UserMongoRepositoryPort.class);
+        userNeo4jRepositoryPort = mock(UserNeo4jRepositoryPort.class);
+        createUserService = new CreateUserService(userMongoRepositoryPort,userNeo4jRepositoryPort);
     }
 
 
@@ -45,20 +49,21 @@ class CreateUserServiceTest {
     void createCorrectUser(){
         User testUser = new User("Pedro");
 
-        when(userRepositoryPort.save(any(User.class)))
+        when(userMongoRepositoryPort.save(any(User.class)))
                 .thenAnswer(i ->{
                     User user = i.getArgument(0);
                     user.setId(UUID.randomUUID().toString());
                     return user;
                 });
 
-        when(userRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(false);
+        when(userMongoRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(false);
 
         User created = createUserService.createUser(testUser);
 
         assertNotNull(created.getId());
 
-        verify(userRepositoryPort,times(1)).save(any(User.class));
+        verify(userMongoRepositoryPort,times(1)).save(any(User.class));
+        verify(userNeo4jRepositoryPort,times(1)).save(any(User.class));
 
     }
 
@@ -66,7 +71,8 @@ class CreateUserServiceTest {
     @DisplayName("Should throw an exception for invalid user argument")
     void createInvalidUser(){
         assertThrows(IllegalArgumentException.class, () -> createUserService.createUser(null));
-        verify(userRepositoryPort,never()).save(any(User.class));
+        verify(userMongoRepositoryPort,never()).save(any(User.class));
+        verify(userNeo4jRepositoryPort,never()).save(any(User.class));
     }
 
     @Test
@@ -75,21 +81,22 @@ class CreateUserServiceTest {
         User testUser = new User("Pedro");
 
         ///Mocked the save repositoryPort method to save correctly the user
-        when(userRepositoryPort.save(any(User.class))).thenReturn(testUser);
+        when(userMongoRepositoryPort.save(any(User.class))).thenReturn(testUser);
 
         ///Mocked the first creations not exists the email
-        when(userRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(false);
+        when(userMongoRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(false);
 
         User createdUser = createUserService.createUser(testUser);
         assertNotNull(createdUser,"The User Created cannot return like a null");
 
         ///Mocked the second creation the email already exists
-        when(userRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(true);
+        when(userMongoRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(true);
 
         ///Try to create the same user with the same email
         assertThrows(UserAlreadyExists.class, () -> createUserService.createUser(testUser));
 
         /// Verify is executed only 1 times for created the first user
-        verify(userRepositoryPort,times(1)).save(any(User.class));
+        verify(userMongoRepositoryPort,times(1)).save(any(User.class));
+        verify(userNeo4jRepositoryPort,times(1)).save(any(User.class));
     }
 }

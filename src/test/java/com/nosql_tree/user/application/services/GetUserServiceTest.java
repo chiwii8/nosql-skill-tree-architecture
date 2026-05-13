@@ -1,8 +1,9 @@
 package com.nosql_tree.user.application.services;
 
+import com.nosql_tree.user.application.services.crud.GetUserService;
 import com.nosql_tree.user.domain.exception.UserNotFoundException;
 import com.nosql_tree.user.domain.model.User;
-import com.nosql_tree.user.domain.ports.outbound.UserRepositoryPort;
+import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
 
 /// Config Test
 import org.junit.jupiter.api.BeforeEach;
@@ -34,19 +35,21 @@ import java.util.Optional;
  *      <li>> The ID mismatch the user should throw a {@code UserNotFoundException}</li>
  *  </ul>
  *
+ *
  * @author aleja
  * @since 07/05/2026
  */
 
+
 class GetUserServiceTest {
-    private UserRepositoryPort userRepositoryPort;
+    private UserMongoRepositoryPort userMongoRepositoryPort;
     private GetUserService getUserService;
 
     @BeforeEach
     void setUp(){
-        userRepositoryPort = mock(UserRepositoryPort.class);
+        userMongoRepositoryPort = mock(UserMongoRepositoryPort.class);
 
-        getUserService = new GetUserService(userRepositoryPort);
+        getUserService = new GetUserService(userMongoRepositoryPort);
 
     }
 
@@ -58,7 +61,7 @@ class GetUserServiceTest {
         User expectedUser = new User(user_id,"Pedro", Collections.emptyList());
 
         /// Set the Mockup Return the expected results in an optional wrapper
-        when(userRepositoryPort.findById(user_id))
+        when(userMongoRepositoryPort.findById(user_id))
                 .thenReturn(Optional.of(expectedUser));
 
         /// Should call the Mocked Port
@@ -69,7 +72,7 @@ class GetUserServiceTest {
         assertEquals(expectedUser.getName(),resultedUser.getName(), "The name of the Users should be equals");
 
         /// This Sentence checks if the MockUp is called one time
-        verify(userRepositoryPort, times(1)).findById(user_id);
+        verify(userMongoRepositoryPort, times(1)).findById(user_id);
     }
 
     @Test
@@ -82,7 +85,7 @@ class GetUserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> getUserService.getUserById(user_id_1));
         assertThrows(IllegalArgumentException.class, () -> getUserService.getUserById(null));
 
-        verifyNoInteractions(userRepositoryPort);
+        verifyNoInteractions(userMongoRepositoryPort);
     }
 
     @Test
@@ -90,7 +93,7 @@ class GetUserServiceTest {
     void getUserThrowExceptionWhenNotFound(){
         String user_id = "user-999";
 
-        when(userRepositoryPort.findById(user_id))
+        when(userMongoRepositoryPort.findById(user_id))
                 .thenReturn(Optional.empty());
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class,() -> getUserService.getUserById(user_id));
@@ -99,7 +102,7 @@ class GetUserServiceTest {
         assertEquals(expected_message,exception.getMessage());
 
         ///The Mockup Should be executed 1 time
-        verify(userRepositoryPort,times(1)).findById(user_id);
+        verify(userMongoRepositoryPort,times(1)).findById(user_id);
 
 
     }
