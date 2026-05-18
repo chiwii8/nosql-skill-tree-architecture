@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Java",
+    "name": "Introduccion",
+    "description": "Sintaxis básica y variables",
+    "videoUrl": "https://video.com/java-1",
+    "resources": ["https://docs.oracle.com/java-1", "https://blog.com/java-basico"],
+    "requirements": []
+  },
+  {
+    "label": "Java",
+    "name": "Programacion Orientada a Objetos",
+    "description": "Clases, Herencia y Polimorfismo",
+    "videoUrl": "https://video.com/java-poo",
+    "resources": ["https://docs.oracle.com/java-poo"],
+    "requirements": ["java-introduccion"]
+  }
+]
