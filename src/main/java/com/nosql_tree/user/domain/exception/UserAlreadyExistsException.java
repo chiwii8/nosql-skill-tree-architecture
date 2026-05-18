@@ -1,7 +1,7 @@
 package com.nosql_tree.user.domain.exception;
 
 /**
- * UserAlreadyExists.java
+ * UserAlreadyExistsException.java
  * <p>
  * Description: [Add the description of the class]
  *
@@ -9,9 +9,9 @@ package com.nosql_tree.user.domain.exception;
  * @since 07/05/2026
  */
 
-public class UserAlreadyExists extends RuntimeException{
+public class UserAlreadyExistsException extends RuntimeException{
 
-    public UserAlreadyExists(String message) {
+    public UserAlreadyExistsException(String message) {
         super(message);
     }
 }
