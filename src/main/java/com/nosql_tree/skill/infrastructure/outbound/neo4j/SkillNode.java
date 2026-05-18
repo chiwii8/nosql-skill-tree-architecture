@@ -1,8 +1,11 @@
-package com.nosql_tree.skill.infrastructure.outbound;
+package com.nosql_tree.skill.infrastructure.outbound.neo4j;
 
 import com.nosql_tree.skill.domain.model.Skill;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.Set;
 
@@ -17,17 +20,38 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@Node("Skill")
 public class SkillNode {
 
-    private String id;
+
+    @Id
+    private String slug;
+
+    private String label;
 
     private String name;
 
-    private String description;
-
-    private int status;
-
-
     /// Relation, indicate the requirements needed to unlock this skill
-    private Set<Skill> requirements;
+    @Relationship(type = "REQUIRES", direction = Relationship.Direction.OUTGOING)
+    private Set<SkillNode> requirements;
+
+    public SkillNode(String label, String name) {
+        this.slug = generateSlug(label,name);
+        this.label = label;
+        this.name = name;
+
+    }
+
+    public SkillNode(String label, String name, Set<SkillNode> requirements) {
+        this.slug = generateSlug(label,name);
+        this.label = label;
+        this.name = name;
+        this.requirements = requirements;
+    }
+
+    private String generateSlug(String label, String name){
+        return (label + "-" + name).toLowerCase()
+                .replace(" ","-")
+                .replace("[^a-z0-9-]","");
+    }
 }
