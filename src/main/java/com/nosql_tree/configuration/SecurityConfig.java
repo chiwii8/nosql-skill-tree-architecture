@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated()
                 )*/
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())   /// Configuration Established for the Development and test of the application
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/**").authenticated().anyRequest().permitAll())   /// Configuration Established for the Development and test of the application
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
