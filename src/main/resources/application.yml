@@ -1,6 +1,8 @@
 spring:
   application:
     name: nosql-tree
+  profile:
+    active: dev
   data:
     mongodb:
       host: localhost
@@ -20,3 +22,13 @@ springdoc:
 server:
   port: 8080
 debug: true
+
+logging:
+  level:
+    com.nosql_tree: DEBUG
+  file:
+    name: logs/app-nosql-tree.log
+  logback:
+      rollingpolicy:
+        max-file-size: 5MB
+        max-history: 7
