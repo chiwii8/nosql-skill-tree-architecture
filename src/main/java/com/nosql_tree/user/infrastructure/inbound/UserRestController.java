@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 // TODO: We dont control the modifications over the different variables in the corresponding service, so could desencatenate in the followings error:
 // UpdateUser: When we update in this section we can overtake the email from already existing it, change the password for a plane password
 // The change of the email can cause problems when we implements the login for cant correctly identified the account searched.
+// The use of deleteUser should be only do by admin request, or by the user by herself.
 
 @RestController
 @RequestMapping("/api/user")

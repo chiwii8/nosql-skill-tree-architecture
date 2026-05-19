@@ -1,6 +1,6 @@
 package com.nosql_tree.user.application.services.crud;
 
-import com.nosql_tree.user.domain.exception.UserAlreadyExists;
+import com.nosql_tree.user.domain.exception.UserAlreadyExistsException;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.inbound.CreateUserPort;
 import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
@@ -37,7 +37,7 @@ public class CreateUserService implements CreateUserPort {
         }
 
         if(userMongoRepositoryPort.existsByEmail(user.getEmail()))
-            throw new UserAlreadyExists("The User email already exists in the database");
+            throw new UserAlreadyExistsException("The User email already exists in the database");
 
         String uuid = UUID.randomUUID().toString();
         String hashedPassword = HashPasswordUtil.encryptPassword(user.getPassword());
