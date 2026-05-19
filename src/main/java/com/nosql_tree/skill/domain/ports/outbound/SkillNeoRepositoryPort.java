@@ -5,8 +5,9 @@ import com.nosql_tree.skill.domain.model.Skill;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-public interface SkillRepositoryPort {
+public interface SkillNeoRepositoryPort {
     void save(Skill skill);
     void addDependency(String skillSlug, String prerequisiteSlug);
     Optional<Skill> findBySlug(String slug);
@@ -20,5 +21,5 @@ public interface SkillRepositoryPort {
 
     List<Skill> findAllSkills();
     List<SkillTreeMap.SkillEdge> findAllDependencies();
-    Skill updateSkillAndRelationships(String currentSlug, Skill updatedSkill, List<String> prerequisiteSlugs);
+    Skill updateSkillAndRelationships(String currentSlug, Skill updatedSkill, Set<String> prerequisiteSlugs);
 }
