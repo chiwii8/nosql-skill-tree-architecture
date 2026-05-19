@@ -1,7 +1,7 @@
 package com.nosql_tree.user.application.services;
 
 import com.nosql_tree.user.application.services.crud.CreateUserService;
-import com.nosql_tree.user.domain.exception.UserAlreadyExists;
+import com.nosql_tree.user.domain.exception.UserAlreadyExistsException;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
 import com.nosql_tree.user.domain.ports.outbound.UserNeo4jRepositoryPort;
@@ -93,7 +93,7 @@ class CreateUserServiceTest {
         when(userMongoRepositoryPort.existsByEmail(testUser.getEmail())).thenReturn(true);
 
         ///Try to create the same user with the same email
-        assertThrows(UserAlreadyExists.class, () -> createUserService.createUser(testUser));
+        assertThrows(UserAlreadyExistsException.class, () -> createUserService.createUser(testUser));
 
         /// Verify is executed only 1 times for created the first user
         verify(userMongoRepositoryPort,times(1)).save(any(User.class));
