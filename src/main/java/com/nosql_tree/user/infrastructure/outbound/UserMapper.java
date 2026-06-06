@@ -28,7 +28,7 @@ public class UserMapper {
 
         document.setId(user.getId());
         document.setName(user.getName());
-        document.setUnlockedSkills(user.getUnlockedSkills());
+        document.setCompletedSkills(user.getCompletedSkills());
         document.setEmail(user.getEmail());
         document.setPassword(user.getPassword());
         document.setRole(user.getRole());
@@ -53,7 +53,7 @@ public class UserMapper {
         return new User(
                 document.getId(),
                 document.getName(),
-                document.getUnlockedSkills(),
+                document.getCompletedSkills(),
                 document.getEmail(),
                 document.getPassword(),
                 document.getRole(),

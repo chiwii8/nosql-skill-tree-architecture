@@ -1,7 +1,7 @@
 spring:
   application:
     name: nosql-tree
-  profile:
+  profiles:
     active: dev
   data:
     mongodb:

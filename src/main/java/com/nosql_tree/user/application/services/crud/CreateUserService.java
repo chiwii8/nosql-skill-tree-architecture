@@ -1,6 +1,7 @@
 package com.nosql_tree.user.application.services.crud;
 
 import com.nosql_tree.user.domain.exception.UserAlreadyExistsException;
+import com.nosql_tree.user.domain.model.Role;
 import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.inbound.CreateUserPort;
 import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
@@ -47,7 +48,7 @@ public class CreateUserService implements CreateUserPort {
                 user.getName(),
                 user.getEmail(),
                 hashedPassword,
-                user.getRole()
+                user.getRole() == null ? Role.USER: user.getRole()
         );
 
         User savedUser = this.userMongoRepositoryPort.save(newUser);

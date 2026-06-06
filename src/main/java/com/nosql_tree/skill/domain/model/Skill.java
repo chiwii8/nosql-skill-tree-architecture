@@ -62,6 +62,16 @@ public class Skill {
         this.requirements = requirements != null ? requirements : new HashSet<>();
     }
 
+    public Skill(Skill skill){
+        this.slug = generateSlug(skill.label,skill.name);
+        this.label = skill.label;
+        this.name = skill.name;
+        this.description = skill.description;
+        this.videoUrl = skill.videoUrl;
+        this.resources = skill.resources != null ? skill.resources : new ArrayList<>();
+        this.requirements = skill.requirements != null ? skill.requirements : new HashSet<>();
+    }
+
     ///Setters y Getters
 
     public String getSlug() {

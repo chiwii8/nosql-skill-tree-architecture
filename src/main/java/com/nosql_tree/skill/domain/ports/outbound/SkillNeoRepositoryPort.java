@@ -17,7 +17,7 @@ public interface SkillNeoRepositoryPort {
     boolean existsBySlug(String slug);
     void deleteBySlug(String slug);
 
-    boolean hasDependencies(String slug);
+    boolean existsByRequiredBySlug(String slug);
 
     List<Skill> findAllSkills();
     List<SkillTreeMap.SkillEdge> findAllDependencies();

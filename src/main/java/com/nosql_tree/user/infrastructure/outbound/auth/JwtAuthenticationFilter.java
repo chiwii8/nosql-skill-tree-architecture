@@ -70,4 +70,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // Si la ruta es de Swagger o Auth, el filtro JWT no se ejecuta
+        return path.startsWith("/swagger-ui") || path.startsWith("/api/v3/docs");
+    }
 }

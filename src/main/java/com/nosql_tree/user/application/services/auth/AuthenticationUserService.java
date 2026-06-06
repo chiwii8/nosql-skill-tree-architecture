@@ -43,7 +43,7 @@ public class AuthenticationUserService {
 
         String token = jwtService.generateToken(loggedUser);
 
-        return new AuthResponse(token,loggedUser.getEmail(), loggedUser.getName(), loggedUser.getRole());
+        return new AuthResponse(token,loggedUser.getEmail(), loggedUser.getName(), loggedUser.getRole(),loggedUser.getCompletedSkills());
 
     }
 }

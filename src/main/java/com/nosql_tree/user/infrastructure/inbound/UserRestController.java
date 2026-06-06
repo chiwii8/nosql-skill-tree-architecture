@@ -6,8 +6,12 @@ import com.nosql_tree.user.domain.ports.inbound.CreateUserPort;
 import com.nosql_tree.user.domain.ports.inbound.DeleteUserPort;
 import com.nosql_tree.user.domain.ports.inbound.GetUserPort;
 import com.nosql_tree.user.domain.ports.inbound.UpdateUserPort;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -48,6 +52,20 @@ public class UserRestController {
 
         try{
             User user = getUserPort.getUserById(id);
+            return ResponseEntity.ok(user);
+
+        }catch(UserNotFoundException  e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> getUser(@AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();
+
+        try{
+            User user = getUserPort.getUserByEmail(email);
             return ResponseEntity.ok(user);
 
         }catch(UserNotFoundException  e){

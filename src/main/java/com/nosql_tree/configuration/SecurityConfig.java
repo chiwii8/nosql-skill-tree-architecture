@@ -4,6 +4,7 @@ import com.nosql_tree.user.infrastructure.outbound.auth.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -38,18 +40,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                /*.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",
+                .authorizeHttpRequests(auth -> auth
+                        /*.requestMatchers(
+                                "/api/auth/**",
+                                "/api/v3/docs",
                                 "/api/v3/docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
-
-
                         )
                         .permitAll()
-                        .anyRequest().authenticated()
-                )*/
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/**").authenticated().anyRequest().permitAll())   /// Configuration Established for the Development and test of the application
+                        .anyRequest().authenticated()*/
+                        .anyRequest().permitAll()
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

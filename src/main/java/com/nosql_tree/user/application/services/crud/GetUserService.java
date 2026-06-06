@@ -40,4 +40,17 @@ public class GetUserService implements GetUserPort {
 
         return optionalUser.get();
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        if(email == null || email.isBlank())
+            throw new IllegalArgumentException("The email is not valid, maybe null or blank");
+
+        Optional<User> optionalUser = userMongoRepositoryPort.findByEmail(email);
+
+        if(optionalUser.isEmpty())
+            throw new UserNotFoundException("The user is not Found with email: " + email);
+
+        return optionalUser.get();
+    }
 }

@@ -7,6 +7,7 @@ import com.nosql_tree.skill.domain.ports.inbound.CreateSkillPort;
 import com.nosql_tree.skill.domain.ports.outbound.SkillMongoRepositoryPort;
 import com.nosql_tree.skill.domain.ports.outbound.SkillNeoRepositoryPort;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import java.util.Set;
  * @since 13/05/2026
  */
 
+@Slf4j
 @Service
 public class CreateSkillService implements CreateSkillPort {
     private final SkillNeoRepositoryPort skillNeoRepositoryPort;
@@ -42,12 +44,17 @@ public class CreateSkillService implements CreateSkillPort {
     @Override
     public void createSkill(Skill skill, Set<String> prerequisites){
 
-        if(skill.getSlug() != null){
+        /// Make a copy to secure the correct creation of the Slug
+        Skill newSkill = new Skill(skill);
+
+        if(newSkill.getSlug() == null){
+            log.info("The new skill cannot be null");
             throw new IllegalArgumentException("The Slug of the Skill cannot be null");
         }
 
         ///Verify if already exists an identical Slug -> label + - + name
-        if(skillNeoRepositoryPort.existsBySlug(skill.getSlug())){
+        if(skillNeoRepositoryPort.existsBySlug(newSkill.getSlug())){
+            log.info("The new skill cannot exists another skill with the same slug {}",newSkill.getSlug());
             throw new SkillAlreadyExistsException();
         }
 
@@ -58,6 +65,7 @@ public class CreateSkillService implements CreateSkillPort {
             Optional<Skill> optional =  skillNeoRepositoryPort.findBySlug(slug);
 
             if(optional.isEmpty()){
+                log.info("The skill node prerequisite cannot be found");
                 throw new SkillNotFoundException("The Skill node  prerequisite cannot be found");
             }
             preSkills.add(optional.get().getSlug());

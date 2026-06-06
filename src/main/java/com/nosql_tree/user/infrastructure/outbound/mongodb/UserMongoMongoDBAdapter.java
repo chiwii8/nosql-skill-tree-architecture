@@ -4,7 +4,8 @@ import com.nosql_tree.user.domain.model.User;
 import com.nosql_tree.user.domain.ports.outbound.UserMongoRepositoryPort;
 import com.nosql_tree.user.infrastructure.outbound.UserMapper;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
+
+import java.util.*;
 
 /**
  * UserMongoMongoDBAdapter.java
@@ -65,5 +66,22 @@ public class UserMongoMongoDBAdapter implements UserMongoRepositoryPort {
     @Override
     public boolean existsByEmail(String email) {
         return mongoRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Set<String> getCompletedSkills(String email) {
+        return mongoRepository.findByEmail(email)
+                .map(UserDocument::getCompletedSkills)
+                .orElse(Collections.emptySet());
+    }
+
+    @Override
+    public void addCompletedSkill(String email, String slug) {
+        mongoRepository.addCompletedSkill(email, slug);
+    }
+
+    @Override
+    public long countUser() {
+        return mongoRepository.count();
     }
 }

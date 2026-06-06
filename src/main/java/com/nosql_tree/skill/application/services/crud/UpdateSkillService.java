@@ -9,6 +9,7 @@ import com.nosql_tree.skill.domain.ports.outbound.SkillMongoRepositoryPort;
 import com.nosql_tree.skill.domain.ports.outbound.SkillNeoRepositoryPort;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 
 import java.util.Set;
@@ -23,6 +24,7 @@ import java.util.Set;
  */
 
 @Slf4j
+@Service
 public class UpdateSkillService  implements UpdateSkillPort {
 
     private final SkillNeoRepositoryPort skillNeoRepositoryPort;
@@ -39,7 +41,7 @@ public class UpdateSkillService  implements UpdateSkillPort {
     public Skill update(String currentSlug, Skill updatedSkill, Set<String> newPrerequisiteSlugs) {
 
         if (currentSlug == null || currentSlug.isBlank()) {
-            log.error("Update failed: current slug is null or blank");
+            log.warn("Update failed: current slug is null or blank");
             throw new IllegalArgumentException("Current slug cannot be null or blank");
         }
 
@@ -51,13 +53,14 @@ public class UpdateSkillService  implements UpdateSkillPort {
 
 
         if (!currentSlug.equals(newSlug)) {
-            if (skillNeoRepositoryPort.hasDependencies(currentSlug)) {
+            if (skillNeoRepositoryPort.existsByRequiredBySlug(currentSlug)) {
                 log.warn("Blocked update: Cannot change name/label of '{}' because other skills depend on it.", currentSlug);
                 throw new SkillHasDependenciesException("Cannot change name or label of a skill that is a prerequisite for other skills.");
             }
 
 
             if (skillNeoRepositoryPort.existsBySlug(newSlug)) {
+                log.warn("A skill with the new slug {} already exists", newSlug);
                 throw new SkillDuplicateException("A skill with the slug " + newSlug + " already exists.");
             }
         }

@@ -1,15 +1,5 @@
 package com.nosql_tree.user.application.services.auth;
 
-/**
- * JwtService.java
- * <p>
- * Description: This is an Auxiliary service created for the simple separation of the responsibility. Then is focused in the generation of the tokens
- *
- *
- * @author aleja
- * @since 08/05/2026
- */
-
 import com.nosql_tree.user.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -25,21 +15,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * JwtService.java
+ * <p>
+ * Description: This is an Auxiliary service created for the simple separation of the responsibility. Then is focused in the generation of the tokens
+ *
+ *
+ * @author aleja
+ * @since 08/05/2026
+ */
+
 @Service
 public class JwtService {
 
     @Value("${spring.security.jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; //24h
+    private static final long EXPIRATION_TIME = (long) 1000 * 60 * 60 * 24; //24h
 
     /**
      * This method generated a jwt token using the information of User model
-     * @param user
-     * @return
+     * @param user The user information required to generate the token
+     * @return generated token for 24h duration
      */
     public String generateToken(User user){
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", user.getRole());
+        extraClaims.put("role", user.getRole().name());
 
         return Jwts
                 .builder()

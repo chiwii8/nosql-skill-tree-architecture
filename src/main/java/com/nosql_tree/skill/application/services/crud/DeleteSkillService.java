@@ -33,18 +33,18 @@ public class DeleteSkillService implements DeleteSkillPort {
     @Transactional
     @Override
     public void deleteBySlug(String slug) {
-        if(slug ==null || slug.isBlank()) {
-            log.error("The Slug cannot be null or blank");
+        if(slug == null || slug.isBlank()) {
+            log.warn("The Slug cannot be null or blank");
             throw new IllegalArgumentException("The Slug cannot be null or blank");
         }
 
         if(!skillNeoRepositoryPort.existsBySlug(slug)){
-            log.error("The Skill cannot be found in the database");
+            log.warn("The Skill cannot be found in the database");
             throw new SkillNotFoundException();
         }
 
-        if(skillNeoRepositoryPort.hasDependencies(slug)){
-            log.error("Cannot delete skill '{}' because other skills depends on it",slug);
+        if(skillNeoRepositoryPort.existsByRequiredBySlug(slug)){
+            log.warn("Cannot delete skill '{}' because other skills depends on it",slug);
             throw new SkillHasDependenciesException("Cannot delete a skill that is required by other skills");
         }
 

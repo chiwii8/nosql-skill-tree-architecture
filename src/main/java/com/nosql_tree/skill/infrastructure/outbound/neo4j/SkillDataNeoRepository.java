@@ -1,11 +1,13 @@
 package com.nosql_tree.skill.infrastructure.outbound.neo4j;
 
-import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Repository
@@ -21,11 +23,11 @@ public interface SkillDataNeoRepository extends Neo4jRepository<SkillNode, Strin
 
     @Query("MATCH (dependent:Skill)-[:REQUIRES]->(target:Skill {slug: $slug}) " +
             "RETURN count(dependent) > 0")
-    boolean hasDependencies(String slug);
+    boolean hasDependencies(@Param("slug") String slug);
 
     @Query("MATCH (dependent:Skill)-[:REQUIRES]->(required:Skill) " +
-            "RETURN dependent.slug AS fromSlug, required.slug AS toSlug")
-    List<Map<String, String>> findAllEdges();
+            "RETURN dependent.slug + '|' + required.slug")
+    List<String> findAllEdges();
 
     @Query("MATCH (s:Skill {label: $label}) RETURN s")
     List<SkillNode> findByLabel(String label);

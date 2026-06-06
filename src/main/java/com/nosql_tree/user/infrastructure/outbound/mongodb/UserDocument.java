@@ -1,14 +1,15 @@
 package com.nosql_tree.user.infrastructure.outbound.mongodb;
 
 
+import com.nosql_tree.user.domain.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * UserDocument.java
@@ -26,14 +27,14 @@ public class UserDocument {
     @Id
     private String id;
     private String name;
-    private List<String> unlockedSkills;
+    private Set<String> completedSkills;
 
     ///UserAccount variables, use in the same clase for short time and more control of the document
     @Indexed(unique = true)
     private String email;   // Represents the username in the login
     private String password; // Should be hashed
 
-    private String role;
+    private Role role;
 
 
     /// More info for MongoDB document

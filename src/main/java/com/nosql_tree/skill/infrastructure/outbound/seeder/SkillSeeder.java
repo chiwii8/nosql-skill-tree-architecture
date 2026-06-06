@@ -46,9 +46,12 @@ public class SkillSeeder implements CommandLineRunner {
         log.info("Starting the seeding process of skills from JSON ...");
 
         try{
-            Skill javaIntro = new Skill("Introduccion", "Java", "Sintaxis básica y variables", "https://video.url/java1", List.of("https://docs.com"));
-            Skill javaPoo = new Skill("Programacion Orientada a Objetos", "Java", "Clases, herencia y polimorfismo", "https://video.url/java2", List.of());
-            Skill springBoot = new Skill("Spring Boot Basics", "Spring", "Creación de APIs REST", "https://video.url/spring1", List.of());
+            if(!mongoPort.findAllSkills().isEmpty())
+                return;
+
+            Skill javaIntro = new Skill("Java", "Introduccion", "Sintaxis básica y variables", "https://video.url/java1", List.of("https://docs.com"));
+            Skill javaPoo = new Skill("Java", "Programacion Orientada a Objetos", "Clases, herencia y polimorfismo", "https://video.url/java2", List.of());
+            Skill springBoot = new Skill("Spring", "Programacion Orientada a Objetos", "Creación de APIs REST", "https://video.url/spring1", List.of());
 
             mongoPort.save(javaIntro);
             neo4jPort.save(javaIntro);
@@ -65,7 +68,7 @@ public class SkillSeeder implements CommandLineRunner {
             neo4jPort.addDependency("java-programacion-orientada-a-objetos", "java-introduccion");
 
             // Spring Boot requiere POO
-            neo4jPort.addDependency("spring-spring-boot-basics", "java-programacion-orientada-a-objetos");
+            neo4jPort.addDependency("spring-programacion-orientada-a-objetos", "java-programacion-orientada-a-objetos");
 
             log.info("¡Seeder finish successful!.");
         }catch (Exception ex){

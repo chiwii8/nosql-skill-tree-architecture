@@ -1,4 +1,4 @@
-package com.nosql_tree.user.application.services;
+package com.nosql_tree.user.application.services.user.crud;
 
 import com.nosql_tree.user.application.services.crud.GetUserService;
 import com.nosql_tree.user.domain.exception.UserNotFoundException;

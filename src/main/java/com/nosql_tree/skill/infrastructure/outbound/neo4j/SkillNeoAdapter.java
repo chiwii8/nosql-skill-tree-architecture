@@ -72,7 +72,7 @@ public class SkillNeoAdapter implements SkillNeoRepositoryPort {
         if(requiredSkills.isEmpty())
             return true;
         return userMongoRepositoryPort.findByEmail(userEmail)
-                .map(user -> user.getUnlockedSkills().containsAll(requiredSkills))
+                .map(user -> user.getCompletedSkills().containsAll(requiredSkills))
                 .orElse(false);
     }
 
@@ -92,7 +92,7 @@ public class SkillNeoAdapter implements SkillNeoRepositoryPort {
     }
 
     @Override
-    public boolean hasDependencies(String slug) {
+    public boolean existsByRequiredBySlug(String slug) {
         return skillDataNeoRepository.hasDependencies(slug);
     }
 
@@ -105,14 +105,17 @@ public class SkillNeoAdapter implements SkillNeoRepositoryPort {
 
     @Override
     public List<SkillTreeMap.SkillEdge> findAllDependencies() {
-        List<Map<String, String>> edgesData = skillDataNeoRepository.findAllEdges();
+        // 1. Recogemos la lista de strings planos: ["java-poo|java-intro", "spring|java-poo"]
+        List<String> rawEdges = skillDataNeoRepository.findAllEdges();
 
-        // 2. Mapeamos el resultado de la consulta Cypher al objeto de Dominio
-        return edgesData.stream()
-                .map(edge -> new SkillTreeMap.SkillEdge(
-                        edge.get("fromSlug"),
-                        edge.get("toSlug")
-                ))
+        // 2. Separamos las piezas y mapeamos directamente a tu objeto de Dominio
+        return rawEdges.stream()
+                .map(edgeStr -> {
+                    String[] parts = edgeStr.split("\\|");
+                    String fromSlug = parts[0];
+                    String toSlug = parts[1];
+                    return new SkillTreeMap.SkillEdge(fromSlug, toSlug);
+                })
                 .toList();
     }
 

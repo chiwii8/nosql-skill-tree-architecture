@@ -4,4 +4,5 @@ import com.nosql_tree.user.domain.model.User;
 
 public interface GetUserPort {
     User getUserById(String id);
+    User getUserByEmail(String email);
 }

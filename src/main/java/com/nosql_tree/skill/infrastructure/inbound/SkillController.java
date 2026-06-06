@@ -11,6 +11,7 @@ import com.nosql_tree.skill.infrastructure.outbound.SkillMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -38,6 +39,7 @@ public class SkillController {
         this.updateSkillPort = updateSkillPort;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EDITOR')")
     @PostMapping
     public ResponseEntity<Skill> createSkill(@RequestBody SkillRequest request){
         log.info("REST request to create skill: {}", request.name());
@@ -50,6 +52,7 @@ public class SkillController {
         return new ResponseEntity<>(newSkill, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EDITOR')")
     @PutMapping("/{slug}")
     public ResponseEntity<Skill> updateSkill(@PathVariable String slug, @RequestBody SkillRequest request){
         log.info("REST request to update current skill {} slug" , slug);
@@ -66,12 +69,14 @@ public class SkillController {
         return ResponseEntity.ok(readSkillPort.findBySlug(slug));
     }
 
+
     @GetMapping("/tree")
     public ResponseEntity<SkillTreeMap> getFullTree(){
         log.info("REST request to get full skill tree");
         return ResponseEntity.ok(readSkillPort.getFullTree());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EDITOR')")
     @DeleteMapping("/{slug}")
     public ResponseEntity<Void> deleteBySlug(@PathVariable String slug){
         log.info("REST request to delete {} that leaf",slug);
